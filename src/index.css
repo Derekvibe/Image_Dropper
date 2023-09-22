@@ -16,3 +16,7 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.card input, .card .DragBox .on-drop, .card .DragBox.dragover .visible {
+  display: none;
+}

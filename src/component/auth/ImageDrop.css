@@ -1,0 +1,12 @@
+/* ImageDrop.css */
+
+.DragBox {
+    transition: border-width 0.2s ease, background-color 0.2s ease, transform 0.2s ease;
+  }
+  
+  .dragging {
+    border-width: 4px;
+    background-color: #f0f0f0;
+    transform: scale(1.05);
+  }
+  
