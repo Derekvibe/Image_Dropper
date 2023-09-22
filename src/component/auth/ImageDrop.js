@@ -102,7 +102,7 @@ const ImageDrop = () => {
           <p className="text-blue-500 font-bold">Drag & Drop Image uploading</p>
         </div>
         <div
-          className={`DragBox h-40 rounded-md border-dotted border-blue-400
+          className={`DragBox rounded-md border-dotted border-blue-400
           border-2 bg-white flex justify-center items-center select-none mt-3 w-11/12 ml-10 h-80 ${isDragging ? 'dragging' : ''}`}
           onDragOver={onDragOver}
           onDragLeave={onDragLeave}
