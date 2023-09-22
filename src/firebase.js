@@ -3,7 +3,7 @@ import { getAuth } from "firebase/auth";
 
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDiW7iL1_-stmxjKQnI4ZAPvVHKRSL2saQ",
+  apiKey: process.env.Auth-keys,
   authDomain: "draggerdrop-auth.firebaseapp.com",
   projectId: "draggerdrop-auth",
   storageBucket: "draggerdrop-auth.appspot.com",
