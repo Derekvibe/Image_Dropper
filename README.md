@@ -9,3 +9,5 @@ password: 1Password
 once you have loged in, it displays another page where the drag and drop will be perfomed. in the DragBox whenever an image is dragged into it gives a little transition animation. 
 
 The images being dragged into the DragBox are displayed below the box and they is an option to delete image
+
+

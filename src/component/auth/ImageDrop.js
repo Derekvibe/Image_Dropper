@@ -1,171 +1,155 @@
 import { signOut } from "firebase/auth";
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getAuth } from "firebase/auth";
-import "./ImageDrop.css";
+import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
 
-const ImageDrop = () => {
-  const [images, setImages] = useState([]);
-  const [isDragging, setIsDragging] = useState(false);
-  const fileInputRef = useRef(null);
-
+function ImageDrop() {
   const auth = getAuth();
-  const history = useNavigate();
+  const navigate = useNavigate();
+  const [term, setTerm] = useState("");
+  const [filteredImages, setFilteredImages] = useState([]);
 
-  function selectFiles() {
-    fileInputRef.current.click();
-  }
+  const Images = [
+    "https://img.freepik.com/free-photo/weather-effects-composition_23-2149853295.jpg",
+    "https://img.freepik.com/free-photo/city-blue-sky_1417-1867.jpg",
+    "https://img.freepik.com/free-photo/rough-metallic-surface-texture_23-2148953930.jpg",
+    "https://images.pexels.com/photos/1438761/pexels-photo-1438761.jpeg",
+    "https://images.pexels.com/photos/572897/pexels-photo-572897.jpeg",
+    "https://img.freepik.com/free-photo/fresh-leaf-reflects-vibrant-green-morning-dew-generated-by-ai_188544-15521.jpg",
+    "https://img.freepik.com/free-photo/beautiful-african-female-feeling-grateful_181624-46352.jpg",
+    "https://img.freepik.com/free-photo/young-beautiful-woman-with-flowers-near-face_186202-5624.jpg",
+    "https://images.pexels.com/photos/1390403/pexels-photo-1390403.jpeg",
+    "https://images.pexels.com/photos/39308/runners-silhouettes-athletes-fitness-39308.jpeg",
+    "https://images.pexels.com/photos/2649403/pexels-photo-2649403.jpeg",
+    "https://img.freepik.com/free-photo/abstract-design-with-colorful-patterns-nature-leaf-generated-by-ai_188544-15573.jpg",
+    "https://img.freepik.com/free-photo/vertical-shot-pathway-middle-grassy-field-with-trees-cloudy-sky_181624-9081.jpg",
+    "https://images.pexels.com/photos/5902149/pexels-photo-5902149.jpeg",
+    "https://img.freepik.com/free-photo/cascade-boat-clean-china-natural-rural_1417-1356.jpg",
+    "https://img.freepik.com/free-photo/excited-young-man-celebrating-success-making-fist-pump-move-shouting-happy-winning-rejoicing-white-background_176420-54717.jpg?",
+    "https://img.freepik.com/free-photo/closeup-clear-water-sea-waves_181624-4031.jpg",
+    "https://img.freepik.com/free-photo/splash-bargain-line-rain-signing_1134-965.jpg",
+    "https://img.freepik.com/free-photo/3d-water-ai-generate_23-2150685444.jpg",
+    "https://img.freepik.com/free-photo/makeup-brushes-with-whirling-pink-powder_23-2148208975.jpg",
+    "https://img.freepik.com/free-photo/blue-smooth-wall-textured-background_53876-106133.jpg",
+    "https://images.pexels.com/photos/18197687/pexels-photo-18197687/free-photo-of-beach-and-hill-on-sea-shore-in-black-and-white.jpeg",
+    "https://images.pexels.com/photos/18391462/pexels-photo-18391462/free-photo-of-snow-flight-man-bird.jpeg",
+    "https://img.freepik.com/free-photo/summer-background-sea-water_64049-160.jpg",
+    "https://images.pexels.com/photos/17852406/pexels-photo-17852406/free-photo-of-people-walking-on-wooden-footpath-on-beach.jpeg",
+    "https://images.pexels.com/photos/18069290/pexels-photo-18069290/free-photo-of-young-woman-in-dress-standing-in-water-on-sunset.jpeg",
+    "https://images.pexels.com/photos/16278274/pexels-photo-16278274/free-photo-of-kittens-in-box.jpeg",
+    "https://images.pexels.com/photos/16946246/pexels-photo-16946246/free-photo-of-food-art-apple-summer.jpeg",
+    "https://images.pexels.com/photos/17117787/pexels-photo-17117787/free-photo-of-dulces-dulces.jpeg",
+    "https://img.freepik.com/free-photo/dark-thunderstorm-danger-electricity-spooky-landscape-generative-ai_188544-8943.jpg",
+    "https://img.freepik.com/free-photo/beautiful-scenery-rock-formations-by-sea-queens-bath-kauai-hawaii-sunset_181624-36857.jpg",
+    "https://img.freepik.com/free-photo/line-drive-asphalt-countryside-cloud_1417-281.jpg",
+    "https://img.freepik.com/free-photo/forest-road_1112-1868.jpg",
+  ];
 
-  function onFileSelect(event) {
-    const files = event.target.files;
-    if (files.length === 0) return;
-
-    const newImages = [];
-
-    for (let i = 0; i < files.length; i++) {
-      if (files[i].type.split("/")[0] !== "image") continue;
-      if (!images.some((e) => e.name === files[i].name)) {
-        newImages.push({
-          name: files[i].name,
-          url: URL.createObjectURL(files[i]),
-        });
-      }
-    }
-
-    setImages((prevImages) => [...prevImages, ...newImages]);
-  }
-
-  function deleteImage(index) {
-    const updatedImages = [...images];
-    updatedImages.splice(index, 1);
-    setImages(updatedImages);
-  }
-
-  function onDragOver(event) {
-    event.preventDefault();
-    setIsDragging(true);
-    event.dataTransfer.dropEffect = "copy";
-  }
-
-  function onDragLeave(event) {
-    event.preventDefault();
-    setIsDragging(false);
-  }
-
-  function onDrop(event) {
-    event.preventDefault();
-    setIsDragging(false);
-    const files = event.dataTransfer.files;
-
-    const newImages = [];
-
-    for (let i = 0; i < files.length; i++) {
-      if (files[i].type.split("/")[0] !== "image") continue;
-      if (!images.some((e) => e.name === files[i].name)) {
-        newImages.push({
-          name: files[i].name,
-          url: URL.createObjectURL(files[i]),
-        });
-      }
-    }
-
-    setImages((prevImages) => [...prevImages, ...newImages]);
-  }
-
-  function uploadImages() {
-    history("/GallaeryImages");
-  }
-  
-  
+  useState(() => {
+    setFilteredImages(Images);
+  }, []);
 
   const handleClick = () => {
     signOut(auth)
       .then(() => {
-        history("/");
+        navigate("/");
       })
       .catch((error) => {
         alert("Sign out error:", error);
       });
   };
 
+  const handleSearch = (e) => {
+    e.preventDefault();
+
+    const filtered = Images.filter((imageUrl) =>
+      imageUrl.toLowerCase().includes(term.toLowerCase())
+    );
+
+    setFilteredImages(filtered);
+  };
+
+  const handleDragStart = (e, index) => {
+    e.dataTransfer.setData("index", index);
+  };
+
+  const handleDragOver = (e, index) => {
+    e.preventDefault();
+    const draggedIndex = e.dataTransfer.getData("index");
+    if (draggedIndex !== index) {
+      const updatedImages = [...filteredImages];
+      const draggedImage = updatedImages[draggedIndex];
+      updatedImages[draggedIndex] = updatedImages[index];
+      updatedImages[index] = draggedImage;
+      setFilteredImages(updatedImages);
+    }
+  };
+
+  const handleDragEnd = (e) => {
+    // Reset opacity and transform when the drag operation ends
+    e.currentTarget.style.opacity = "1";
+    e.currentTarget.style.transform = "scale(1)";
+  };
+
+  const handleDragEnter = (e) => {
+    // Add some visual feedback during drag
+    e.currentTarget.style.opacity = "0.7";
+    e.currentTarget.style.transform = "scale(0.95)";
+  };
+
   return (
     <>
-      <div className="flex m-4 gap-3 justify-between">
-        <h1 className="text-2xl text-white text-center">Dragger</h1>
-        <div className="bg-white text-black w-20 text-center p-1 rounded-sm hover:bg-blue-800 hover:text-white">
-          <button onClick={handleClick}>signOut</button>
-        </div>
-      </div>
-
-      <div className="card p-3 drop-shadow-md rounded-md overflow-hidden">
-        <div className="text-center">
-          <p className="text-blue-500 font-bold">Drag & Drop Image uploading</p>
-        </div>
-        <div
-          className={`DragBox rounded-md border-dotted border-blue-400
-          border-2 bg-white flex justify-center items-center select-none mt-3 w-11/12 ml-10 h-80 ${isDragging ? 'dragging' : ''}`}
-          onDragOver={onDragOver}
-          onDragLeave={onDragLeave}
-          onDrop={onDrop}
-        >
-          {isDragging ? (
-            <span className="text-blue-500 ml-1 cursor-pointer transition hover:opacity-60">
-              Drop Images Here
-            </span>
-          ) : (
-            <>
-              Drag & Drop Image here or{" "}
-              <span
-                className="text-blue-500 ml-1 cursor-pointer transition hover:opacity-60"
-                role="button"
-                onClick={selectFiles}
-              >
-                Browse
-              </span>
-            </>
-          )}
-
-          <input
-            name="file"
-            type="file"
-            className="files"
-            multiple
-            ref={fileInputRef}
-            onChange={onFileSelect}
-          />
-        </div>
-        <div className="imageContainer w-full h-auto flex justify-start items-start flex-wrap max-h-52 overflow-y-auto mt-3">
-          {images.map((image, index) => (
-            <div
-              className="image grid grid-row-5 w-36 mt-2 pr-3 mb-3 relative"
-              key={index}
+      <div className="p-5">
+        <div className="flex search_nav items-center justify-between">
+          <form onSubmit={handleSearch} className="flex">
+            <input
+              onChange={(e) => setTerm(e.target.value)}
+              value={term}
+              placeholder="Search Images"
+              className="rounded-md border border-transparent focus:outline-none focus:ring-0 text-xm md:text-sm lg:text-base flex-grow"
+            />
+            <button
+              type="submit"
+              className="p-1 rounded-md hover:bg-black hover:text-white m-1 bg-white"
             >
-              <span
-                className="delete text-white absolute top-1 right-2 cursor-pointer text-base"
-                onClick={() => deleteImage(index)}
-              >
-                &times;
-              </span>
-              <img
-                src={image.url}
-                alt={image.name}
-                className="w-full h-full rounded"
-              />
-            </div>
-          ))}
+              Search
+            </button>
+          </form>
+
+          <div className="bg-white text-black w-20 text-center p-1 rounded-sm hover:bg-blue-800 hover:text-white">
+            <button onClick={handleClick}>signOut</button>
+          </div>
         </div>
 
-          <button
-            type="button"
-            className="text-white outline-0 rounded-md border-0 font-semibold 
-              py-2 px-3 w-11/12 ml-10 bg-blue-500 z-50"
-            onClick={uploadImages}
+        <div className="w-full block mt-5">
+          <ResponsiveMasonry
+            columnsCountBreakPoints={{ 350: 1, 750: 2, 900: 3 }}
           >
-            Upload
-          </button>
+            <Masonry gutter="20px">
+              {filteredImages.map((imageUrl, i) => (
+                <div
+                  key={i}
+                  draggable
+                  onDragStart={(e) => handleDragStart(e, i)}
+                  onDragOver={(e) => handleDragOver(e, i)}
+                  onDragEnd={handleDragEnd}
+                  onDragEnter={handleDragEnter}
+                  style={{
+                    opacity: 1,
+                    transform: "scale(1)",
+                    transition: "opacity 0.3s, transform 0.3s",
+                  }}
+                >
+                  <img src={imageUrl} alt={`Image ${i}`} />
+                </div>
+              ))}
+            </Masonry>
+          </ResponsiveMasonry>
+        </div>
       </div>
     </>
   );
-};
+}
 
 export default ImageDrop;

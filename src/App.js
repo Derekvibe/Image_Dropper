@@ -2,8 +2,8 @@ import React from "react";
 import './index.css';
 import Home from "./component/auth/Home";
 import ImageDrop from "./component/auth/ImageDrop";
-import GallaeryImages from "./component/auth/GallaeryImages";
 import { Routes, Route, BrowserRouter } from "react-router-dom";
+import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
 
 function App() {
   return (
@@ -12,7 +12,6 @@ function App() {
         <Routes>
           <Route path="/" element={<Home/>} />
           <Route path="/ImageDrop" element={<ImageDrop/>} />
-          <Route path="/GallaeryImages" element={<GallaeryImages/>} />
         </Routes>
       </div>
     </BrowserRouter>
