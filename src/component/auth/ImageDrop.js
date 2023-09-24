@@ -87,13 +87,11 @@ function ImageDrop() {
   };
 
   const handleDragEnd = (e) => {
-    // Reset opacity and transform when the drag operation ends
     e.currentTarget.style.opacity = "1";
     e.currentTarget.style.transform = "scale(1)";
   };
 
   const handleDragEnter = (e) => {
-    // Add some visual feedback during drag
     e.currentTarget.style.opacity = "0.7";
     e.currentTarget.style.transform = "scale(0.95)";
   };
